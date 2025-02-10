@@ -1,0 +1,65 @@
+<div xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+  <h2 class="text-center">Пребарај автобуска станица по град</h2>
+  <div class="form-group">
+    <form class="d-flex my-5 " th:method="GET" action="/busStations">
+
+      <select name="cityId" class="form-control mr-2">
+        <option value="" disabled selected>Избери град</option>
+        <option th:each="city : ${cities}"
+                th:value="${city.getId()}"
+                th:text="${city.getName()}"
+
+        >
+        </option>
+      </select>
+
+      <button type="submit" class="btn btn-primary">Пребарај</button>
+
+    </form>
+
+  </div>
+  <table class="table ">
+    <thead class="thead-dark">
+    <tr >
+      <th class="align-content-center" scope="col">#</th>
+      <th class="align-content-center" scope="col">Слика</th>
+      <th class="align-content-center" scope="col">Име</th>
+      <th class="align-content-center" scope="col">Град</th>
+      <th class="align-content-center" scope="col">Адреса</th>
+      <th class="align-content-center" scope="col">Телефон</th>
+      <th scope="col" >
+        <a class="btn btn-success px-4 " sec:authorize="hasRole('ROLE_ADMIN')" href="/busStations/create">Create</a>
+      </th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:if="${!busStations.isEmpty() && busStations!=null}" th:each="busStation,iterStat:${busStations}">
+      <th scope="row" th:text="${iterStat.index+1}">1</th>
+      <td><img th:src="${busStation.getImageUrl()}" width="150" height="150" alt=""/></td>
+      <td th:text="${busStation.getName()}"></td>
+      <td th:text="${busStation.getCityName()}"></td>
+      <td th:text="${busStation.getAddress()}"></td>
+      <td th:text="${busStation.getPhone()}"></td>
+      <td >
+        <a class="btn btn-primary" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{'busStations/edit/{id}' (id=${busStation.getId()})}">Edit</a>
+        <form th:method="DELETE" sec:authorize="hasRole('ROLE_ADMIN')"   th:action="@{'busStations/delete/{id}' (id=${busStation.getId()})}">
+          <button type="submit" class="btn my-2 btn-danger">Delete</button>
+        </form>
+        <a class="btn btn-info"  th:href="@{'busStations/details/{id}' (id=${busStation.getId()})}">Details</a>
+
+      </td>
+    </tr>
+    <tr th:if="${busStations.isEmpty() || busStations==null}">
+       <td colspan="7">
+         <h5 class="text-center text-dark">Нема aвтобуски станици..</h5>
+
+       </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+</div>

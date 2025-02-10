@@ -1,0 +1,93 @@
+<div xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <h2 class="text-center">Пребарај возни редови</h2>
+    <div class="form-group">
+        <form class="d-flex align-items-center  justify-content-around my-5 " th:method="GET" action="/timetables">
+
+            <div class="form-group">
+                <label for="startingCityId">Место на поаѓање</label>
+                <select id="startingCityId" required name="startingCityId" class="form-control">
+                    <option value="" selected disabled>-Избери место-</option>
+                    <option th:each="city:${cities}"
+                            th:value="${city.getId()}"
+                            th:text="${city.getName()}"
+                            th:selected="${startCity!=null && startCity==city.getId()}">
+
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="finalCityId">Дестинација</label>
+                <select id="finalCityId" required name="finalCityId" class="form-control">
+                    <option value="" selected disabled>-Избери место-</option>
+                    <option th:each="city:${cities}"
+                            th:value="${city.getId()}"
+                            th:text="${city.getName()}"
+                            th:selected="${finalCity!=null && finalCity==city.getId()}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="busOperatorId">Превозник</label>
+                <select id="busOperatorId" name="busOperatorId" class="form-control">
+                    <option value="" selected >-Избери превозник-</option>
+                    <option th:each="busOperator:${busOperators}"
+                            th:value="${busOperator.getId()}"
+                            th:text="${busOperator.getName()}"
+                            th:selected="${operator!=null && operator==busOperator.getId()}">
+                    </option>
+                </select>
+            </div>
+            <div class="align-content-center pt-3">
+                <button type="submit" class="btn   btn-primary">Пребарај</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <table class="table ">
+        <thead class="thead-dark">
+        <tr >
+            <th class="align-content-center" scope="col">#</th>
+            <th class="align-content-center" scope="col">Место на поаѓање</th>
+            <th class="align-content-center" scope="col">Дестинација</th>
+            <th class="align-content-center" scope="col">Време</th>
+            <th class="align-content-center" scope="col">Превозник</th>
+            <th class="align-content-center" scope="col">Еден правец</th>
+            <th class="align-content-center" scope="col">Два правци</th>
+            <th class="align-content-center" scope="col">Важи за</th>
+            <th scope="col">
+                <a class="btn btn-success px-4 " sec:authorize="hasRole('ROLE_ADMIN')"  href="/timetables/create">Create</a>
+            </th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:if="${!timetables.isEmpty()}" th:each="timetable,iterStat:${timetables}">
+            <th scope="row" th:text="${iterStat.index+1}">1</th>
+            <td th:text="${timetable.getStartingCityName()}"></td>
+            <td th:text="${timetable.getFinalCityName()}"></td>
+            <td th:text="${timetable.getStartTime()}"></td>
+            <td th:text="${timetable.getBusOperatorName()}"></td>
+            <td th:text="${timetable.getOneWayTicketPrice()}+' ден'"></td>
+            <td th:text="${timetable.getTwoWayTicketPrice()}+' ден'"></td>
+            <td th:text="${#strings.listJoin(timetable.getDaysOfWeek(),', ')}"></td>
+
+            <td sec:authorize="hasRole('ROLE_ADMIN')" >
+                <a class="btn btn-primary "  th:href="@{'timetables/edit/{id}' (id=${timetable.getId()})}">Edit</a>
+                <form  class="d-inline" th:method="DELETE"  th:action="@{'timetables/delete/{id}' (id=${timetable.getId()})}">
+                    <button type="submit" class="btn my-2 btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${timetables.isEmpty()}">
+            <td colspan="9">
+                <h5 class="text-center text-dark">Нема возни редови..</h5>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>

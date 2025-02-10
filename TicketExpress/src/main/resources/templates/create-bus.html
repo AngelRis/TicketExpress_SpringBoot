@@ -1,0 +1,38 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <h1 class="my-4">Додај нов автобус</h1>
+    <form th:method="POST" action="/buses/create" th:object="${bus}">
+        <div class="form-group">
+            <label for="brand">Бренд на автобусот</label>
+            <input type="text"
+                   class="form-control"
+                   id="brand"
+                   name="brand"
+                   required
+                   th:field="*{brand}"
+                   placeholder="Внеси бренд на автобусот">
+        </div>
+        <div class="form-group">
+            <label for="model">Модел на автобусот</label>
+            <input type="text"
+                   class="form-control"
+                   id="model"
+                   name="model"
+                   th:field="*{model}"
+                   required
+                   placeholder="Внеси модел на автобусот">
+        </div>
+        <div class="form-group">
+            <label for="numberOfSeats">Број на седишта</label>
+            <input type="number"
+                   class="form-control"
+                   id="numberOfSeats"
+                   name="numberOfSeats"
+                   th:field="*{numberOfSeats}"
+                   required
+                   placeholder="Внеси број на седишта од автобусот">
+        </div>
+        <button class="btn btn-primary" type="submit">Зачувај</button>
+
+    </form>
+
+</div>

@@ -1,0 +1,88 @@
+<div xmlns:th="http://www.thymeleaf.org">
+  <h1>Додај нова автобуска станица</h1>
+  <form th:method="POST" action="/busStations/create" th:object="${busStation}" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="name">Име</label>
+      <input type="text"
+             class="form-control"
+             id="name"
+             name="name"
+             th:field="*{name}"
+             required
+             placeholder="Внеси име на автобуската станица">
+    </div>
+    <div class="form-group">
+      <label for="cityId">Град</label>
+      <select name="cityId" id="cityId" required class="form-control mr-2">
+        <option value="" selected disabled>-Избери град-</option>
+        <option th:each="city : ${cities}"
+                th:value="${city.getId()}"
+                th:text="${city.getName()}"
+                th:required="true"
+                th:field="*{cityId}"
+        >
+        </option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="address">Адреса</label>
+      <input type="text"
+             class="form-control"
+             id="address"
+             name="address"
+             th:field="*{address}"
+             required
+             placeholder="Внеси адреса на автобуската станица">
+    </div>
+    <div class="form-group">
+      <label for="phone">Телефон</label>
+      <input type="text"
+             class="form-control"
+             id="phone"
+             name="phone"
+             th:field="*{phone}"
+             required
+             placeholder="Внеси телефон од автобуската станица">
+    </div>
+    <div class="form-group">
+      <label for="image">Слика</label>
+      <input type="file"
+             class="form-control"
+             id="image"
+             name="image"
+
+      >
+    </div>
+    <input type="hidden" th:field="*{latitude}" id="latitude" name="latitude">
+    <input type="hidden" th:field="*{longitude}" id="longitude" name="longitude">
+    <label for="map">Одбери локација</label>
+    <div id="map" style="height: 400px; width: 700px;" class="my-3"></div>
+    <button class="btn btn-primary" type="submit">Зачувај</button>
+
+  </form>
+
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+
+    var map = L.map('map').setView([41.9981, 21.4254], 13);
+    var marker;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+
+    map.on('click', function(e) {
+      if (marker) {
+        map.removeLayer(marker);
+      }
+      marker = L.marker(e.latlng).addTo(map);
+
+      document.getElementById('latitude').value = e.latlng.lat;
+      document.getElementById('longitude').value = e.latlng.lng;
+
+      marker.bindPopup("Latitude: " + e.latlng.lat + "<br>Longitude: " + e.latlng.lng).openPopup();
+    });
+  });
+</script>

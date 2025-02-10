@@ -1,0 +1,55 @@
+<div xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <h2 class="text-center">Пребарај превозници</h2>
+    <div class="form-group">
+        <form class="d-flex my-5 " th:method="GET" action="/busOperators">
+
+            <input type="text"
+                   class="form-control mr-2"
+                   id="text"
+                   name="text"
+                   placeholder="Внеси име на превозникот">
+            <button type="submit" class="btn btn-primary">Пребарај</button>
+
+        </form>
+
+    </div>
+    <table class="table ">
+        <thead class="thead-dark">
+        <tr >
+            <th class="align-content-center" scope="col">#</th>
+            <th class="align-content-center" scope="col">Лого</th>
+            <th class="align-content-center" scope="col">Име</th>
+            <th class="align-content-center" scope="col">Телефон</th>
+            <th scope="col">
+                <a class="btn btn-success px-4 " sec:authorize="hasRole('ROLE_ADMIN')" href="/busOperators/create">Create</a>
+            </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <th:block>
+
+        </th:block>
+
+        <tr th:if="${!busOperators.isEmpty()}" th:each="busOperator,iterStat:${busOperators}">
+            <th scope="row" th:text="${iterStat.index+1}">1</th>
+            <td><img th:src="${busOperator.getLogoUrl()}" width="100" height="100" alt=""/></td>
+            <td th:text="${busOperator.getName()}"></td>
+            <td th:text="${busOperator.getPhone()}"></td>
+            <td sec:authorize="hasRole('ROLE_ADMIN')">
+                <a class="btn btn-primary"  th:href="@{'busOperators/edit/{id}' (id=${busOperator.getId()})}">Edit</a>
+                <form th:method="DELETE" th:action="@{'busOperators/delete/{id}' (id=${busOperator.getId()})}">
+                    <button type="submit" class="btn my-2 btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${busOperators.isEmpty()}">
+            <td colspan="5">
+                <h5 class="text-center text-dark">Нема превозници..</h5>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>

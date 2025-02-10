@@ -1,0 +1,38 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <h1>Едитирај превозник</h1>
+    <form th:method="POST" th:object="${busOperator}" th:action="@{'/busOperators/edit/{id}' (id=${busOperator.getId()})}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Име на превозник</label>
+            <input type="text"
+                   class="form-control"
+                   id="name"
+                   name="name"
+                   th:value="${busOperator.getName()}"
+                   th:field="*{name}"
+                   required
+                   placeholder="Внеси име на превозникот">
+        </div>
+        <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="text"
+                   class="form-control"
+                   id="phone"
+                   name="phone"
+                   th:value="${busOperator.getPhone()}"
+                   th:field="*{phone}"
+                   required
+                   placeholder="Внеси телефон на превозникот">
+        </div>
+        <div class="form-group">
+            <label for="logo">Лого</label>
+            <input type="file"
+                   class="form-control"
+                   id="logo"
+                   name="logo"
+
+            >
+        </div>
+        <button class="btn btn-primary" type="submit">Зачувај</button>
+
+    </form>
+</div>

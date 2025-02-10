@@ -1,0 +1,42 @@
+<div xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <h2 class="text-center my-4">Автобуси</h2>
+
+    <table class="table ">
+        <thead class="thead-dark">
+        <tr>
+            <th class="align-content-center" scope="col">#</th>
+            <th class="align-content-center" scope="col">Бренд</th>
+            <th class="align-content-center" scope="col">Модел</th>
+            <th class="align-content-center" scope="col">Број на седишта</th>
+            <th scope="col">
+                <a class="btn btn-success px-4 " sec:authorize="hasRole('ROLE_ADMIN')"  href="/buses/create">Create</a>
+            </th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:if="${!buses.isEmpty()}">
+            <tr th:each="bus,iterStat:${buses}">
+                <th scope="row" th:text="${iterStat.index+1}">1</th>
+                <td th:text="${bus.getBrand()}"></td>
+                <td th:text="${bus.getModel()}"></td>
+                <td th:text="${bus.getNumberOfSeats()}"></td>
+                <td sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a class="btn btn-primary " th:href="@{'buses/edit/{id}' (id=${bus.getId()})}">Edit</a>
+                    <form class="d-inline" th:method="DELETE" th:action="@{'buses/delete/{id}' (id=${bus.getId()})}">
+                        <button type="submit" class=" btn my-2 btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </th:block>
+        <tr th:if="${buses.isEmpty()}">
+            <td colspan="5">
+                <h5 class="text-center text-dark">Нема автобуси..</h5>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+
+</div>

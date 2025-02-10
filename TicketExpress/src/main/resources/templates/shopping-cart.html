@@ -1,0 +1,42 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <h2 class="text-center my-4">Кошничка</h2>
+    <div th:if="${tickets!=null}">
+        <h6 class="text-center">Доколку сакате да го добиете бројот на седиште на вашата е-адреса и успешно да го резервирате билетот мора да ги купите билетите!</h6>
+        <h6 class="text-center">Доколку не побрзате со купување, може да се пополни бројот на преостанати слободни седишта.</h6>
+    </div>
+
+    <th:block class="mx-auto my-3" th:if="${error}">
+        <p th:text="${error}" class="alert text-center alert-danger"></p>
+
+    </th:block>
+    <div class="col">
+        <div class="card my-5 mx-4" th:if="${tickets!=null}" th:each="ticket:${tickets}">
+            <div class="card-body">
+                <h5 class="card-title" th:text="'ID: '+${ticket.getId()}"></h5>
+                <h5 class="card-title" th:text="'Релација: '+${ticket.getStartingCity()}+'-'+${ticket.getFinalCity()}"></h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary" th:text="'Датум: '+${ticket.getDate}+' '+${ticket.getStartingTime()}"></h6>
+                <p class="card-text" th:text="'Превозник: '+${ticket.getBusOperatorName()}"></p>
+                <p class="card-text" th:text="'Тип: '+${ticket.isRoundTripTicket()?'Повратен':'Во еден правец'}"></p>
+                <p class="card-text" th:text="'Патник: '+${ticket.getUsername()}"></p>
+                <p class="card-text" th:text="'Цена: '+${ticket.getPrice()}"></p>
+                <a th:href="@{'/shoppingCart/removeTicket/{id}' (id=${ticket.getId()})}" class="card-link">Откажи</a>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-around" th:if="${tickets!=null}">
+            <div >
+                <h5 th:text="'Вкупно: '+${shoppingCart.getTotalPrice()}+' MKD'"></h5>
+            </div>
+            <div >
+                <form   th:method="POST" th:action="@{'/shoppingCart/checkout/{id}' (id=${shoppingCart.getId()})}">
+                    <button  type="submit" class="btn my-2 btn-success">Купи</button>
+                </form>
+            </div>
+
+        </div>
+        <div class="align-items-center text-center" th:if="${tickets==null}">
+            <img src="/images/shopping_cart.png" style="width: 200px;height: 200px"  alt="">
+            <h6>Вашата кошничка е празна!</h6>
+            <p>Резервирај билет <a href="/tickets">тука</a>.</p>
+        </div>
+    </div>
+</div>

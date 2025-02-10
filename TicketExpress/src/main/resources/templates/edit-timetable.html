@@ -1,0 +1,108 @@
+<div xmlns:th="http://www.thymeleaf.org" >
+    <h1>Едитирај возен ред</h1>
+    <form th:method="POST" th:action="@{'/timetables/edit/{id}'(id=${timetable.getId()})}" th:object="${timetable}">
+        <div class="form-group">
+            <label for="startingBusStationId">Место на поаѓање</label>
+            <select id="startingBusStationId" required name="startingBusStationId" class="form-control">
+                <option value="" disabled>-Избери место-</option>
+                <option th:each="busStation:${busStations}"
+                        th:value="${busStation.getId()}"
+                        th:text="${busStation.getCityName()}"
+                        th:field="*{startingBusStationId}"
+                        th:selected="${timetable.getStartingBusStationId()==busStation.getId()}">
+
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="finalBusStationId">Дестинација</label>
+            <select id="finalBusStationId" required name="finalBusStationId" class="form-control">
+                <option value="" selected disabled>-Избери место-</option>
+                <option th:each="busStation:${busStations}"
+                        th:value="${busStation.getId()}"
+                        th:text="${busStation.getCityName()}"
+                        th:field="*{finalBusStationId}"
+                        th:selected="${timetable.getFinalBusStationId()==busStation.getId()}">
+
+
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="startTime">Полазно време</label>
+            <input type="time"
+                   class="form-control"
+                   id="startTime"
+                   name="startTime"
+                   th:value="${timetable.getStartTime()}"
+                   required
+            >
+        </div>
+        <div class="form-group">
+            <label for="busOperatorId">Превозник</label>
+            <select id="busOperatorId" required name="busOperatorId" class="form-control">
+                <option value="" disabled selected>-Избери превозник-</option>
+                <option th:each="busOperator:${busOperators}"
+                        th:value="${busOperator.getId()}"
+                        th:text="${busOperator.getName()}"
+                        th:field="*{busOperatorId}"
+                        th:selected="${timetable.getBusOperatorId()==busOperator.getId()}"
+                >
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="busId">Автобус</label>
+            <select id="busId" required name="busId" class="form-control">
+                <option value="" disabled selected>-Избери автобус-</option>
+                <option th:each="bus:${buses}"
+                        th:value="${bus.getId()}"
+                        th:text="${bus.getModel()}+' - '+${bus.getNumberOfSeats()}"
+                        th:field="*{busId}"
+                        th:selected="${timetable.getBusId()==bus.getId()}"
+                >
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="oneWayTicketPrice">Цена за еден правец</label>
+            <input type="number"
+                   class="form-control"
+                   id="oneWayTicketPrice"
+                   name="oneWayTicketPrice"
+                   placeholder="Внесете цена"
+                   th:field="*{oneWayTicketPrice}"
+                   th:value="${timetable.getOneWayTicketPrice()}"
+                   required
+            >
+        </div>
+        <div class="form-group">
+            <label for="twoWayTicketPrice">Цена за два правци</label>
+            <input type="number"
+                   class="form-control"
+                   id="twoWayTicketPrice"
+                   name="twoWayTicketPrice"
+                   placeholder="Внесете цена"
+                   th:field="*{twoWayTicketPrice}"
+                   th:value="${timetable.getTwoWayTicketPrice()}"
+                   required
+            >
+        </div>
+        <div class="form-group">
+            <label for="daysOfWeek">Важи за деновите</label>
+            <select id="daysOfWeek" th:field="*{daysOfWeek}" name="daysOfWeek" class="form-control" required multiple>
+                <option th:each="day:${daysOfWeek}"
+                        th:value="${day}"
+                        th:text="${day.name()}"
+                        th:selected="${timetable.getDaysOfWeek().contains(day)}"
+
+                >
+                </option>
+            </select>
+        </div>
+
+        <button class="btn btn-primary" type="submit">Зачувај</button>
+
+    </form>
+
+</div>

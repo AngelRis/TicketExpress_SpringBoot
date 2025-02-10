@@ -1,0 +1,97 @@
+<div xmlns:th="http://www.thymeleaf.org">
+    <h1>Едитирај автобуска станица</h1>
+    <form th:method="POST" th:object="${busStation}" th:action="@{'/busStations/edit/{id}' (id=${busStation.getId()})}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Име на автобуска станица</label>
+            <input type="text"
+                   class="form-control"
+                   id="name"
+                   name="name"
+                   th:value="${busStation.getName()}"
+                   th:field="*{name}"
+                   required
+                   placeholder="Внеси име на автобуска станица">
+        </div>
+        <div class="form-group">
+            <label for="cityId">Град</label>
+            <select name="cityId" id="cityId" required class="form-control mr-2">
+                <option value="" disabled>-Избери град-</option>
+                <option th:each="city : ${cities}"
+                        th:value="${city.getId()}"
+                        th:text="${city.getName()}"
+                        th:selected="${busStation.getCityId()==city.getId()}"
+                        th:required="true"
+                        th:field="*{cityId}"
+                >
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="address">Адреса</label>
+            <input type="text"
+                   class="form-control"
+                   id="address"
+                   name="address"
+                   th:value="${busStation.getAddress()}"
+                   th:field="*{address}"
+                   required
+                   placeholder="Внеси адреса на автобуската станица">
+        </div>
+        <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="text"
+                   class="form-control"
+                   id="phone"
+                   name="phone"
+                   th:value="${busStation.getPhone()}"
+                   th:field="*{phone}"
+                   required
+                   placeholder="Внеси телефон на автобуската станица">
+        </div>
+        <div class="form-group">
+            <label for="image">Слика</label>
+            <input type="file"
+                   class="form-control"
+                   id="image"
+                   name="image"
+
+            >
+        </div>
+        <input type="hidden"  th:value="${busStation.getLatitude()}" th:field="*{latitude}" id="latitude" name="latitude">
+        <input type="hidden"  th:value="${busStation.getLongitude()}" th:field="*{longitude}" id="longitude" name="longitude">
+        <label for="map">Одбери локација</label>
+        <div id="map" th:data-latitude="${busStation.getLatitude()}"
+             th:data-longitude="${busStation.getLongitude()}"
+             style="height: 400px; width: 700px;" class="my-3"></div>
+
+        <button class="btn btn-primary" type="submit">Зачувај</button>
+
+
+    </form>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var mapElement=document.getElementById('map');
+        var latitude = parseFloat(mapElement.dataset.latitude);
+        var longitude = parseFloat(mapElement.dataset.longitude);
+
+        var map = L.map('map').setView([latitude, longitude], 16);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        var marker = L.marker([latitude, longitude]).addTo(map);
+        marker.bindPopup("Latitude: " + latitude + "<br>Longitude: " + longitude).openPopup();
+        map.on('click', function(e) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            latitude=e.latlng.lat;
+            longitude=e.latlng.lng;
+            document.getElementById('latitude').value = latitude;
+            document.getElementById('longitude').value = longitude;
+            marker = L.marker([latitude, longitude]).addTo(map);
+            marker.bindPopup("Latitude: " + latitude + "<br>Longitude: " + longitude).openPopup();
+        });
+    });
+</script>
